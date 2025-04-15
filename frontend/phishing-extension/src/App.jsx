@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import axios from 'axios'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -13,15 +14,32 @@ function App() {
     body: "Hi, we have detected suspicious activity with your account. Please click here to change your password. http://xfnty.com"
   }
 
-  const handleScan = async () => {
-    const testResponse = {
-      label: "Phishing",
-      explanation: "The email has urgent language and there's a suspicious link attached."
-    }
+const handleScan = async () => {
+    const prompt = `
+    Subject: ${testEmail.subject}
+    From: ${testEmail.sender}
+    Body: ${testEmail.body}
+    
+    Is this email a phishing attempt? Please explain why or why not.
+    `
 
-    setTimeout(() => {
-      setResult(testResponse)
-    }, 500) 
+    try {
+      const res = await axios.post('http://localhost:5000/api/llm-query', {
+        message: prompt
+      })
+
+      setResult({
+        label: "AI Response",
+        explanation: res.data.reply
+      })
+      console.log(res.data.reply)
+    } catch (err) {
+      console.error(err)
+      setResult({
+        label: "Error",
+        explanation: err.response?.data?.error || err.message
+      })
+    }
   }
 
   return (
@@ -42,7 +60,7 @@ function App() {
       {result && (
         <div className={`result ${result.label.toLowerCase()}`}>
           <h2>{result.label}</h2>
-          <p1>{result.explanation}</p1>
+          <p>{result.explanation}</p>
         </div>
       )}
     </div>
