@@ -10,7 +10,18 @@ function App() {
   const testEmail = {
     subject: "Important: Your account information has been compromised",
     sender: "support@xfinit.com",
-    body: "Hi, we have detected suspicious activity with your account. Please click here to change your password."
+    body: "Hi, we have detected suspicious activity with your account. Please click here to change your password. http://xfnty.com"
+  }
+
+  const handleScan = async () => {
+    const testResponse = {
+      label: "Phishing",
+      explanation: "The email has urgent language and there's a suspicious link attached."
+    }
+
+    setTimeout(() => {
+      setResult(testResponse)
+    }, 500) 
   }
 
   return (
@@ -25,9 +36,15 @@ function App() {
           {testEmail.body}
         </p>
       </div>
-      <button>
+      <button onClick={handleScan}>
         Scan Email
       </button>
+      {result && (
+        <div className={`result ${result.label.toLowerCase()}`}>
+          <h2>{result.label}</h2>
+          <p1>{result.explanation}</p1>
+        </div>
+      )}
     </div>
   )
 }
