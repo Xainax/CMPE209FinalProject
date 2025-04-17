@@ -9,6 +9,7 @@
   padding: 2em;
   margin: 40px auto;
   background: #f4f4f4;
+  border-radius: 0.5em;
 }
 
 h1 {
@@ -24,14 +25,22 @@ p {
 }
 
 button {
-  background-color: green;
+  background-color: #007200;
   color: white;
 }
 
-.result {
-  color: white;
+button:hover {
+  background-color: rgb(3, 145, 3);
+  transition: 0.7s;
 }
 
-p1 {
-  color: white;
+.result-card {
+  background-color: #f4f4f4;
+  padding: 2em;
+  margin-top: 16px;
+  border-radius: 0.5em;
+}
+
+h2 {
+  color: black;
 }

@@ -1,11 +1,8 @@
 import { useState } from 'react'
 import axios from 'axios'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
   const [result, setResult] = useState(null)
 
   const testEmail = {
@@ -24,7 +21,7 @@ const handleScan = async () => {
     `
 
     try {
-      const res = await axios.post('http://localhost:5000/api/llm-query', {
+      const res = await axios.post('http://127.0.0.1:5000/api/llm-query', {
         message: prompt
       })
 
@@ -58,7 +55,7 @@ const handleScan = async () => {
         Scan Email
       </button>
       {result && (
-        <div className={`result ${result.label.toLowerCase()}`}>
+        <div className={"result-card"}>
           <h2>{result.label}</h2>
           <p>{result.explanation}</p>
         </div>
