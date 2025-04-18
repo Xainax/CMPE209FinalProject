@@ -3,7 +3,8 @@ import axios from 'axios'
 import './App.css'
 
 function App() {
-  const [result, setResult] = useState(null)
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const testEmail = {
     subject: "Important: Your account information has been compromised",
@@ -12,6 +13,8 @@ function App() {
   }
 
 const handleScan = async () => {
+    setLoading(true);
+
     const prompt = `
     Subject: ${testEmail.subject}
     From: ${testEmail.sender}
@@ -36,6 +39,8 @@ const handleScan = async () => {
         label: "Error",
         explanation: err.response?.data?.error || err.message
       })
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -43,6 +48,7 @@ const handleScan = async () => {
     <div className = "container">
       <h1>OpenAI Phishing Detector</h1>
       <div className="card">
+        document.getElementById("card").textContent = emailData;
         <h3>{testEmail.subject}</h3>
         <p>
           From: {testEmail.sender}
@@ -53,7 +59,8 @@ const handleScan = async () => {
       </div>
       <button onClick={handleScan}>
         Scan Email
-      </button>
+      </button> 
+      {loading && <div className="loader"></div>}
       {result && (
         <div className={"result-card"}>
           <h2>{result.label}</h2>

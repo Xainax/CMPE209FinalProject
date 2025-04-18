@@ -1,6 +1,6 @@
 function getEmailData() {
     const subject = document.querySelector("h2.hP")?.innerText || "";
-    const sender = document.querySelector("span[email]")?.innerText || "";
+    const sender = document.querySelector("span.gD")?.getAttribute("email") || "";
     const body = document.querySelector("div.a3s")?.innerText || "";
   
     if (!body) return;
