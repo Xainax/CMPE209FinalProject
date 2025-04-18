@@ -1,3 +1,5 @@
+console.log("Content script running");
+
 function getEmailData() {
     const subject = document.querySelector("h2.hP")?.innerText || "";
     const sender = document.querySelector("span.gD")?.getAttribute("email") || "";
@@ -10,8 +12,15 @@ function getEmailData() {
       subject,
       body
     };
+
+    chrome.runtime.sendMessage({
+      type: "EMAIL_DATA",
+      payload: emailData
+    })
+
+    console.log("Extracted email data: ", emailData);
   
-    fetch("http://127.0.0.1:5000/analyze", {
+    /*fetch("http://127.0.0.1:5000/analyze", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -22,7 +31,7 @@ function getEmailData() {
     .then(data => {
       alert(`Classification: ${data.label}\nExplanation: ${data.explanation}`);
     })
-    .catch(err => console.error("Error contacting backend:", err));
+    .catch(err => console.error("Error contacting backend:", err)); */
   }
   
   // Gmail is an SPA – use MutationObserver
@@ -34,4 +43,3 @@ function getEmailData() {
   });
   
   observer.observe(document.body, { childList: true, subtree: true });
-  

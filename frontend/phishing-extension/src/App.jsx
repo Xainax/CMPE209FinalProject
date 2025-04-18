@@ -1,10 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import './App.css'
 
 function App() {
+  const [email, setEmail] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      if (request.type === "EMAIL_DATA") {
+        setEmail(request.payload);
+      }
+      console.log(request.payload);
+    });
+  }, []);
 
   const testEmail = {
     subject: "Important: Your account information has been compromised",
@@ -47,16 +57,17 @@ const handleScan = async () => {
   return (
     <div className = "container">
       <h1>OpenAI Phishing Detector</h1>
-      <div className="card">
-        document.getElementById("card").textContent = emailData;
-        <h3>{testEmail.subject}</h3>
-        <p>
-          From: {testEmail.sender}
-        </p>
-        <p>
-          {testEmail.body}
-        </p>
-      </div>
+
+      {email ? (
+        <div className="card">
+          <h3>{email.subject}</h3>
+          <p>From: {email.sender}</p>
+          <p>{email.body}</p>
+        </div>
+      ) : (
+        <p>Please open an email to begin scan.</p>
+      )}
+
       <button onClick={handleScan}>
         Scan Email
       </button> 
