@@ -17,32 +17,36 @@ function App() {
   }, []);
 
   const testEmail = {
-    subject: "Important: Your account information has been compromised",
-    sender: "support@xfinit.com",
-    body: "Hi, we have detected suspicious activity with your account. Please click here to change your password. http://xfnty.com"
+    subject: "Your order has been executed",
+    sender: "noreply@robinhood.com",
+    body: "Your order to sell $30.00 of AMD through your individual account was executed on April 9, 2025 at 3:51 PM ET. You received $30.00 for 0.30832 shares, at an average price of $97.29 per share. Funds available from this trade will be reflected in your withdrawable cash on Apr. 10, 2025."
   }
 
 const handleScan = async () => {
-    setLoading(true);
+    console.log(email)
+    if (!email || !email.subject || !email.sender || !email.body) {
+    setResult({
+      label: "Error",
+      explanation: "Missing required email fields (subject, sender, body). Please ensure the email is fully captured."
+    });
+    return;
+  }
+  setLoading(true);
 
-    const prompt = `
-    Subject: ${testEmail.subject}
-    From: ${testEmail.sender}
-    Body: ${testEmail.body}
-    
-    Is this email a phishing attempt? Please explain why or why not.
-    `
 
     try {
       const res = await axios.post('http://127.0.0.1:5000/api/llm-query', {
-        message: prompt
-      })
+      subject: email.subject,
+      sender: email.sender,
+      body: email.body
+    });
+    const { is_phishing, explanation } = res.data;
+    setResult({
+      label: is_phishing ? "⚠️ Phishing Detected" : "✅ Not Phishing",
+      explanation
+    });
+    console.log(res.data)
 
-      setResult({
-        label: "AI Response",
-        explanation: res.data.reply
-      })
-      console.log(res.data.reply)
     } catch (err) {
       console.error(err)
       setResult({
