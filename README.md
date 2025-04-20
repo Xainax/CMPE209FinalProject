@@ -3,6 +3,16 @@
 Requirement
    - NodeJS version v20.0.0 or greater
    - Python3
+- Build the backend:
+  ```sh
+        cd backend
+        python3 -m venv venv
+        # Depending on if you're using macOS or Windows, use the following commands:
+           - MacOS: source venv/bin/activate
+           - Windows: venv\Scripts\activate
+        pip install -r requirements.txt
+        python app.py
+    ```
 
 - Build the extension:
     ```sh
