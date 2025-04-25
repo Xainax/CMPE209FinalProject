@@ -6,13 +6,17 @@ function App() {
   const [email, setEmail] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(true);
 
   useEffect(() => {
+    setEmailLoading(true);
+
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (request.type === "EMAIL_DATA") {
         setEmail(request.payload);
+        setEmailLoading(false);
       }
-      console.log(request.payload);
+      console.log("Extracted email:" + request.payload);
     });
   }, []);
 
@@ -62,7 +66,12 @@ const handleScan = async () => {
     <div className = "container">
       <h1>OpenAI Phishing Detector</h1>
 
-      {email ? (
+      {emailLoading ? (
+        <div className="load-wrapper">
+          <div className="loader"></div>
+          <p className="load-text">Loading email...</p>
+        </div>
+      ) : email ? (
         <div className="card">
           <h3>{email.subject}</h3>
           <p>From: {email.sender}</p>
@@ -72,9 +81,12 @@ const handleScan = async () => {
         <p>Please open an email to begin scan.</p>
       )}
 
-      <button onClick={handleScan}>
-        Scan Email
-      </button> 
+      {!emailLoading && email && (
+        <button onClick={handleScan}>
+          Scan Email
+        </button> 
+      )}
+
       {loading && <div className="loader"></div>}
       {result && (
         <div className={"result-card"}>
